@@ -1,0 +1,1064 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Swasthy Crave | Stall Manager</title>
+    <style>
+        :root {
+            --green: #173d2b;
+            --green2: #23533a;
+            --gold: #b27a25;
+            --cream: #fbf7e9;
+            --paper: #fffdf6;
+            --muted: #7d8376;
+            --line: #e9e1cc;
+            --red: #a64b3e;
+            --shadow: 0 10px 28px #233a2510
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--cream);
+            color: #213a2b;
+            font: 15px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif
+        }
+
+        button,
+        input,
+        select {
+            font: inherit
+        }
+
+        button {
+            cursor: pointer
+        }
+
+        .app {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 240px 1fr
+        }
+
+        .sidebar {
+            background: var(--green);
+            color: #f8f4e8;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 2px 8px 20px;
+            border-bottom: 1px solid #ffffff26
+        }
+
+        .brandmark {
+            width: 43px;
+            height: 43px;
+            border: 1px solid #d5a14a;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: #e5b75f;
+            font-size: 22px
+        }
+
+        .brand strong {
+            display: block;
+            font: 700 19px Georgia, serif
+        }
+
+        .brand small {
+            color: #d8cba9;
+            letter-spacing: 3px;
+            font-size: 10px
+        }
+
+        .navlabel {
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: #b9c6b5;
+            padding: 0 12px;
+            margin-bottom: 6px
+        }
+
+        .nav {
+            display: grid;
+            gap: 5px
+        }
+
+        .nav button {
+            border: 0;
+            background: transparent;
+            color: #e8ecdf;
+            text-align: left;
+            padding: 11px 12px;
+            border-radius: 10px;
+            display: flex;
+            gap: 12px;
+            align-items: center
+        }
+
+        .nav button span:first-child {
+            width: 21px;
+            text-align: center;
+            font-size: 17px
+        }
+
+        .nav button.active,
+        .nav button:hover {
+            background: #ffffff17;
+            color: #fff
+        }
+
+        .sidebar-note {
+            margin-top: auto;
+            border: 1px solid #ffffff2c;
+            border-radius: 13px;
+            padding: 14px;
+            color: #dce5d5;
+            font-size: 12px
+        }
+
+        .sidebar-note b {
+            display: block;
+            color: #f8f4e8;
+            margin-bottom: 4px
+        }
+
+        main {
+            min-width: 0;
+            padding: 28px clamp(16px, 3vw, 38px) 42px;
+            max-width: 1500px;
+            width: 100%;
+            margin: auto
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 25px
+        }
+
+        .eyebrow {
+            color: var(--gold);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 2px;
+            font-weight: 750
+        }
+
+        .topbar h1 {
+            font: 700 clamp(27px, 3vw, 36px) Georgia, serif;
+            margin: 4px 0
+        }
+
+        .sub {
+            color: var(--muted);
+            margin: 0;
+            font-size: 13px
+        }
+
+        .topactions {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .datepill {
+            border: 1px solid var(--line);
+            background: var(--paper);
+            border-radius: 10px;
+            padding: 10px 13px;
+            color: #536452;
+            font-size: 12px
+        }
+
+        .primary {
+            background: var(--green);
+            color: white;
+            border: 0;
+            border-radius: 10px;
+            padding: 11px 15px;
+            font-weight: 650;
+            box-shadow: 0 5px 12px #173d2b17
+        }
+
+        .primary:hover {
+            background: var(--green2)
+        }
+
+        .secondary {
+            border: 1px solid var(--line);
+            background: var(--paper);
+            color: var(--green);
+            border-radius: 9px;
+            padding: 9px 12px;
+            font-weight: 600
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 20px
+        }
+
+        .stat,
+        .panel,
+        .item {
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: 15px;
+            box-shadow: var(--shadow)
+        }
+
+        .stat {
+            padding: 18px
+        }
+
+        .stathead {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            color: #697769;
+            font-size: 12px
+        }
+
+        .staticon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            background: #e9efdf;
+            color: var(--green);
+            font-size: 17px
+        }
+
+        .stat strong {
+            display: block;
+            font: 700 27px Georgia, serif;
+            margin: 11px 0 4px;
+            color: var(--green)
+        }
+
+        .trend {
+            font-size: 11px;
+            color: #788574
+        }
+
+        .trend b {
+            color: #47734b
+        }
+
+        .contentgrid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(280px, .9fr);
+            gap: 18px
+        }
+
+        .panel {
+            padding: 20px;
+            margin-bottom: 18px;
+            min-width: 0
+        }
+
+        .panelhead {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 17px
+        }
+
+        .panelhead h2 {
+            font: 700 20px Georgia, serif;
+            margin: 0
+        }
+
+        .panelhead p {
+            font-size: 12px;
+            color: var(--muted);
+            margin: 4px 0 0
+        }
+
+        .quickitems {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px
+        }
+
+        .item {
+            padding: 13px;
+            box-shadow: none;
+            display: flex;
+            flex-direction: column;
+            gap: 7px
+        }
+
+        .item .emoji {
+            font-size: 24px
+        }
+
+        .item b {
+            font-size: 13px
+        }
+
+        .item .price {
+            font-size: 12px;
+            color: #697769
+        }
+
+        .item button {
+            margin-top: 3px;
+            width: 100%;
+            background: #f0f2e7;
+            border: 1px solid #dce3d3;
+            border-radius: 8px;
+            padding: 8px;
+            color: var(--green);
+            font-weight: 700
+        }
+
+        .tablewrap {
+            overflow: auto
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 390px
+        }
+
+        th {
+            text-align: left;
+            color: #7a8273;
+            font-size: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 700;
+            padding: 10px 8px;
+            border-bottom: 1px solid var(--line)
+        }
+
+        td {
+            padding: 13px 8px;
+            border-bottom: 1px solid #f0eadc;
+            font-size: 12px
+        }
+
+        tr:last-child td {
+            border-bottom: 0
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 99px;
+            background: #e6efdf;
+            color: #3d7048;
+            font-size: 10px;
+            font-weight: 700
+        }
+
+        .empty {
+            color: var(--muted);
+            text-align: center;
+            padding: 24px
+        }
+
+        .page {
+            display: none
+        }
+
+        .page.active {
+            display: block
+        }
+
+        .formgrid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 13px
+        }
+
+        .field {
+            display: grid;
+            gap: 6px
+        }
+
+        .field label {
+            font-size: 12px;
+            color: #657163;
+            font-weight: 650
+        }
+
+        .field input,
+        .field select {
+            border: 1px solid var(--line);
+            background: #fffef9;
+            padding: 11px;
+            border-radius: 9px;
+            color: var(--green);
+            min-width: 0
+        }
+
+        .field.full {
+            grid-column: 1/-1
+        }
+
+        .notice {
+            background: #f4edd9;
+            border: 1px solid #e9d9b7;
+            border-radius: 10px;
+            padding: 12px;
+            color: #745522;
+            font-size: 12px;
+            margin-bottom: 16px
+        }
+
+        .sale-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+            gap: 18px
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px
+        }
+
+        .menu-product {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 14px;
+            background: #fffef9
+        }
+
+        .menu-product h3 {
+            font: 700 16px Georgia, serif;
+            margin: 6px 0
+        }
+
+        .menu-product p {
+            font-size: 12px;
+            color: var(--muted);
+            margin: 0 0 10px
+        }
+
+        .menu-product button {
+            width: 100%
+        }
+
+        .cartrow {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 11px 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 13px
+        }
+
+        .cartrow small {
+            display: block;
+            color: var(--muted)
+        }
+
+        .cartrow button {
+            border: 0;
+            background: transparent;
+            color: var(--red);
+            font-size: 12px
+        }
+
+        .totalrow {
+            display: flex;
+            justify-content: space-between;
+            padding: 9px 0;
+            color: #627060;
+            font-size: 13px
+        }
+
+        .totalrow.grand {
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--green);
+            border-top: 1px solid var(--line);
+            margin-top: 4px;
+            padding-top: 14px
+        }
+
+        .reporttiles {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px
+        }
+
+        .reporttiles .stat strong {
+            font-size: 22px
+        }
+
+        .chart-controls {
+            display: flex;
+            align-items: end;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 0 0 16px
+        }
+
+        .chart-controls .field {
+            min-width: 210px;
+            flex: 1
+        }
+
+        .chart-wrap {
+            min-height: 250px;
+            display: flex;
+            align-items: stretch;
+            gap: clamp(14px, 5vw, 60px);
+            justify-content: center;
+            padding: 18px 10px 0;
+            border-bottom: 1px solid var(--line)
+        }
+
+        .barcol {
+            flex: 0 1 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            height: 220px;
+            gap: 8px
+        }
+
+        .bar-value {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--green)
+        }
+
+        .bar {
+            width: min(72px, 70%);
+            background: #d7e2cc;
+            border-radius: 8px 8px 2px 2px;
+            min-height: 3px;
+            transition: height .2s
+        }
+
+        .bar.saturday {
+            background: var(--green)
+        }
+
+        .barcol small {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .chart-summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 16px
+        }
+
+        .summarybox {
+            background: #f4f2e6;
+            border-radius: 10px;
+            padding: 12px
+        }
+
+        .summarybox span {
+            display: block;
+            color: var(--muted);
+            font-size: 11px
+        }
+
+        .summarybox strong {
+            display: block;
+            margin-top: 4px;
+            font-size: 18px;
+            color: var(--green)
+        }
+
+        .warning {
+            color: var(--red);
+            font-size: 12px;
+            margin-top: 10px
+        }
+
+        .week-label {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 8px
+        }
+
+        @media(max-width:1000px) {
+            .app {
+                grid-template-columns: 76px 1fr
+            }
+
+            .sidebar {
+                padding: 18px 10px
+            }
+
+            .brand {
+                justify-content: center;
+                padding: 0 0 18px
+            }
+
+            .brandtext,
+            .navlabel,
+            .nav button .navtext,
+            .sidebar-note {
+                display: none
+            }
+
+            .nav button {
+                justify-content: center;
+                padding: 12px 8px
+            }
+
+            .nav button span:first-child {
+                font-size: 20px
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr))
+            }
+
+            .contentgrid,
+            .sale-layout {
+                grid-template-columns: 1fr
+            }
+        }
+
+        @media(max-width:600px) {
+            .app {
+                display: block
+            }
+
+            .sidebar {
+                position: sticky;
+                top: 0;
+                z-index: 4;
+                padding: 8px 10px;
+                display: block
+            }
+
+            .brand {
+                display: none
+            }
+
+            .nav {
+                display: flex;
+                justify-content: space-around;
+                gap: 3px
+            }
+
+            .nav button {
+                padding: 9px 10px;
+                flex: 1
+            }
+
+            .nav button .navtext {
+                display: none
+            }
+
+            main {
+                padding: 20px 12px 30px
+            }
+
+            .topbar {
+                align-items: flex-start
+            }
+
+            .topactions {
+                flex-direction: column;
+                align-items: stretch
+            }
+
+            .datepill {
+                display: none
+            }
+
+            .stats {
+                gap: 9px
+            }
+
+            .stat {
+                padding: 13px
+            }
+
+            .stat strong {
+                font-size: 23px
+            }
+
+            .stathead {
+                font-size: 11px
+            }
+
+            .panel {
+                padding: 14px
+            }
+
+            .quickitems,
+            .menu-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr))
+            }
+
+            .reporttiles,
+            .chart-summary {
+                grid-template-columns: 1fr
+            }
+
+            .formgrid {
+                grid-template-columns: 1fr
+            }
+
+            .field.full {
+                grid-column: auto
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brandmark">❧</div>
+                <div class="brandtext"><strong>Swasthy Crave</strong><small>STALL MANAGER</small></div>
+            </div>
+            <div>
+                <div class="navlabel">WORKSPACE</div>
+                <nav class="nav" id="nav"><button class="active" data-page="dashboard"><span>⌂</span><span
+                            class="navtext">Dashboard</span></button><button data-page="sale"><span>＋</span><span
+                            class="navtext">New sale</span></button><button data-page="history"><span>▤</span><span
+                            class="navtext">Sales history</span></button><button data-page="menu"><span>♧</span><span
+                            class="navtext">Menu & prices</span></button><button
+                        data-page="expenses"><span>₹</span><span class="navtext">Expenses</span></button><button
+                        data-page="reports"><span>▥</span><span class="navtext">Reports</span></button></nav>
+            </div>
+            <div class="sidebar-note"><b>Good food. Real ingredients.</b>Small steps, healthier choices.<br><br><span
+                    style="color:#e1b65e">●</span> Live mode · Google Sheets backend</div>
+        </aside>
+        <main>
+            <header class="topbar">
+                <div>
+                    <div class="eyebrow">Your stall at a glance</div>
+                    <h1 id="pageTitle">Good afternoon 👋</h1>
+                    <p class="sub" id="pageSubtitle">Here’s your recorded stall activity.</p>
+                </div>
+                <div class="topactions">
+                    <div class="datepill" id="todayDate">TODAY</div><button class="primary" onclick="showPage('sale')">＋
+                        New sale</button>
+                </div>
+            </header>
+            <section class="page active" id="dashboard">
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stathead">Recorded sales <span class="staticon">₹</span></div><strong
+                            id="statSales">₹0</strong>
+                        <div class="trend">Total money collected</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stathead">Recorded orders <span class="staticon">▤</span></div><strong
+                            id="statOrders">0</strong>
+                        <div class="trend">Completed orders</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stathead">Recorded expenses <span class="staticon">↘</span></div><strong
+                            id="statExpenses">₹0</strong>
+                        <div class="trend">Expenses saved in Google Sheets</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stathead">Estimated balance <span class="staticon">◈</span></div><strong
+                            id="statBalance">₹0</strong>
+                        <div class="trend">Sales minus recorded expenses</div>
+                    </div>
+                </div>
+                <div class="contentgrid">
+                    <div>
+                        <section class="panel">
+                            <div class="panelhead">
+                                <div>
+                                    <h2>Weekend sales overview</h2>
+                                    <p>Select a week to compare Saturday and Sunday earnings</p>
+                                </div><span class="status">Live data</span>
+                            </div>
+                            <div class="chart-controls">
+                                <div class="field"><label for="weekSelect">Select week (Monday–Sunday)</label><select
+                                        id="weekSelect">
+                                        <option value="">Loading weeks…</option>
+                                    </select></div><button class="secondary" onclick="refreshWeekChart()">Refresh
+                                    chart</button>
+                            </div>
+                            <div id="salesOverview" class="empty">Loading sales data…</div>
+                            <div id="dateWarning" class="warning" hidden></div>
+                        </section>
+                        <section class="panel">
+                            <div class="panelhead">
+                                <div>
+                                    <h2>Recent sales</h2>
+                                    <p>Your latest transactions</p>
+                                </div><button class="secondary" onclick="showPage('history')">View all →</button>
+                            </div>
+                            <div class="tablewrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Order</th>
+                                            <th>Time</th>
+                                            <th>Payment</th>
+                                            <th>Total</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentRows">
+                                        <tr>
+                                            <td colspan="5" class="empty">No sales recorded yet.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                    <div>
+                        <section class="panel">
+                            <div class="panelhead">
+                                <div>
+                                    <h2>Quick sale</h2>
+                                    <p>Tap an item to start an order</p>
+                                </div>
+                            </div>
+                            <div class="quickitems" id="quickItems">
+                                <div class="empty">Loading products…</div>
+                            </div><button class="primary" style="width:100%;margin-top:13px"
+                                onclick="showPage('sale')">Open billing screen →</button>
+                        </section>
+                        <section class="panel">
+                            <div class="panelhead">
+                                <div>
+                                    <h2>Stall checklist</h2>
+                                    <p>Small things to keep on track</p>
+                                </div>
+                            </div><label
+                                style="display:flex;gap:9px;align-items:center;padding:8px 0;font-size:13px"><input
+                                    type="checkbox"> Record today's purchases</label><label
+                                style="display:flex;gap:9px;align-items:center;padding:8px 0;font-size:13px"><input
+                                    type="checkbox"> Check ingredients and packaging</label><label
+                                style="display:flex;gap:9px;align-items:center;padding:8px 0;font-size:13px"><input
+                                    type="checkbox"> Close the day and review totals</label>
+                        </section>
+                    </div>
+                </div>
+            </section>
+            <section class="page" id="sale">
+                <div class="sale-layout">
+                    <section class="panel">
+                        <div class="panelhead">
+                            <div>
+                                <h2>Choose items</h2>
+                                <p>Add products to the current order</p>
+                            </div>
+                        </div>
+                        <div class="menu-grid" id="saleMenu"></div>
+                    </section>
+                    <section class="panel">
+                        <div class="panelhead">
+                            <div>
+                                <h2>Current order</h2>
+                                <p>Review before saving the sale</p>
+                            </div><button class="secondary" onclick="clearCart()">Clear</button>
+                        </div>
+                        <div id="cart">
+                            <div class="empty">No items yet. Choose a product to begin.</div>
+                        </div>
+                        <div style="margin-top:15px" class="field"><label for="saleDate">Sale date</label><input
+                                id="saleDate" type="date" required><small class="sub">Choose the day the sale actually
+                                happened.</small></div>
+                        <div style="margin-top:15px" class="field"><label for="payment">Payment method</label><select
+                                id="payment">
+                                <option>UPI</option>
+                                <option>Cash</option>
+                                <option>Card</option>
+                                <option>Other</option>
+                            </select></div>
+                        <div class="totalrow grand"><span>Total</span><span id="cartTotal">₹0</span></div><button
+                            class="primary" style="width:100%;margin-top:10px" onclick="completeSale()">Save sale
+                            (live)</button>
+                    </section>
+                </div>
+            </section>
+            <section class="page" id="history">
+                <section class="panel">
+                    <div class="panelhead">
+                        <div>
+                            <h2>Sales history</h2>
+                            <p>Sales saved to Google Sheets appear here</p>
+                        </div><button class="secondary" onclick="exportSales()">Export CSV</button>
+                    </div>
+                    <div class="tablewrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order</th>
+                                    <th>Date / time</th>
+                                    <th>Items</th>
+                                    <th>Payment</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyRows"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </section>
+            <section class="page" id="menu">
+                <section class="panel">
+                    <div class="panelhead">
+                        <div>
+                            <h2>Menu & prices</h2>
+                            <p>Products listed in your Google Sheets Menu tab</p>
+                        </div>
+                    </div>
+                    <div class="notice">Edit prices below and tap Save price to update Google Sheets.</div>
+                    <div class="tablewrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Size</th>
+                                    <th>Price</th>
+                                    <th>Availability</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="menuRows"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </section>
+            <section class="page" id="expenses">
+                <div class="contentgrid">
+                    <section class="panel">
+                        <div class="panelhead">
+                            <div>
+                                <h2>Add an expense</h2>
+                                <p>Record what you spend on the stall</p>
+                            </div>
+                        </div>
+                        <form id="expenseForm" class="formgrid">
+                            <div class="field"><label for="expenseAmount">Amount (₹)</label><input id="expenseAmount"
+                                    type="number" min="1" required placeholder="e.g. 250"></div>
+                            <div class="field"><label for="expenseCategory">Category</label><select
+                                    id="expenseCategory">
+                                    <option>Ingredients</option>
+                                    <option>Packaging</option>
+                                    <option>Transport</option>
+                                    <option>Equipment</option>
+                                    <option>Other</option>
+                                </select></div>
+                            <div class="field"><label for="expenseEmoji">Emoji</label><input id="expenseEmoji"
+                                    type="text" maxlength="12" placeholder="e.g. 🌾"></div>
+                            <div class="field"><label for="expenseNote">Note / Ingredient</label><input id="expenseNote"
+                                    placeholder="e.g. Oats, bananas and milk"></div>
+                            <div class="field full"><button class="primary" type="submit">＋ Save expense (live)</button>
+                            </div>
+                        </form>
+                    </section>
+                    <section class="panel">
+                        <div class="panelhead">
+                            <div>
+                                <h2>Recorded expenses</h2>
+                                <p id="expenseCount">0 entries</p>
+                            </div>
+                        </div>
+                        <div id="expenseList" class="empty">No expenses added yet.</div>
+                    </section>
+                </div>
+            </section>
+            <section class="page" id="reports">
+                <section class="panel">
+                    <div class="panelhead">
+                        <div>
+                            <h2>Business snapshot</h2>
+                            <p>Based on records from your Google Sheet</p>
+                        </div><button class="secondary" onclick="window.print()">Print report</button>
+                    </div>
+                    <div class="reporttiles">
+                        <div class="stat">
+                            <div class="stathead">Recorded revenue</div><strong id="reportRevenue">₹0</strong>
+                            <div class="trend">Sales recorded in Google Sheets</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stathead">Recorded expenses</div><strong id="reportExpenses">₹0</strong>
+                            <div class="trend">Expenses recorded in Google Sheets</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stathead">Balance before stock cost</div><strong id="reportProfit">₹0</strong>
+                            <div class="trend">Sales minus recorded expenses</div>
+                        </div>
+                    </div>
+                    <div class="notice" style="margin-top:18px">This is recorded sales minus recorded expenses.
+                        Ingredient costs and wastage are not included unless you record them as expenses.</div>
+                </section>
+            </section>
+            <footer style="color:#92917e;font-size:11px;text-align:center;padding:12px">SWASTHY CRAVE · GOOD FOOD · REAL
+                INGREDIENTS · BETTER YOU</footer>
+        </main>
+    </div>
+    <script>
+        const API_BASE = 'https://script.google.com/macros/s/AKfycbwc6c6UDR7q7vc1fGnG25JFCeeKjmhlC3MOXC81IWRiAv19NZmdeynEwqE2XbS7o_9rfg/exec';
+        let menu = [], cart = [], sales = [], expenses = [], orderNo = 0;
+        const money = n => '₹' + Number(n || 0).toLocaleString('en-IN', {maximumFractionDigits: 2});
+        async function api(action, params = {}) {const qs = new URLSearchParams({action, ...params}).toString(); const res = await fetch(`${API_BASE}?${qs}`); if (!res.ok) throw new Error('HTTP ' + res.status); return res.json()}
+        async function apiPost(action, data) {const params = new URLSearchParams({action, ...data}).toString(); const res = await fetch(API_BASE, {method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: params}); if (!res.ok) throw new Error('HTTP ' + res.status); return res.json()}
+        // Handles common header variants returned by Apps Script; saleDate must still be returned by getSales.
+        function normalizeSale(s) {const pick = (...keys) => {for (const k of keys) {if (s[k] !== undefined && s[k] !== null && String(s[k]).trim() !== '') return s[k]} const wanted = keys.map(k => k.toLowerCase().replace(/[^a-z]/g, '')); for (const [k, v] of Object.entries(s)) {if (wanted.includes(k.toLowerCase().replace(/[^a-z]/g, '')) && v !== undefined && v !== null && String(v).trim() !== '') return v} return ''}; return {...s, id: pick('id', 'orderId', 'order'), time: pick('time', 'dateTime', 'timestamp'), saleDate: pick('saleDate', 'sale_date', 'sale date', 'salesDate', 'dateOfSale', 'date'), items: pick('items', 'item'), payment: pick('payment', 'paymentMethod'), total: Number(pick('total', 'amount', 'grandTotal') || 0), status: pick('status') || 'Paid'}}
+        async function loadData() {const [menuRes, salesRes, expensesRes] = await Promise.all([api('getMenu'), api('getSales'), api('getExpenses')]); menu = (menuRes.success ? menuRes.data : []).map(m => ({...m, price: Number(m.price || 0)})); sales = (salesRes.success ? salesRes.data : []).map(normalizeSale); expenses = (expensesRes.success ? expensesRes.data : []).map(e => ({...e, amount: Number(e.amount || 0)})); orderNo = sales.reduce((max, s) => Math.max(max, Number(String(s.id || '').replace('#SC-', '')) || 0), 0)}
+        function showPage(id) {document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === id)); document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('active', b.dataset.page === id)); const titles = {dashboard: ['Good afternoon 👋', 'Here’s your recorded stall activity.'], sale: ['New sale', 'Build an order and record its payment.'], history: ['Sales history', 'Your transactions, all in one place.'], menu: ['Menu & prices', 'Keep your menu and prices up to date.'], expenses: ['Expenses', 'Record the money going out.'], reports: ['Reports', 'Understand sales and recorded costs.']}; document.getElementById('pageTitle').textContent = titles[id][0]; document.getElementById('pageSubtitle').textContent = titles[id][1]; if (id === 'sale') renderSaleMenu(); if (id === 'menu') renderMenu(); if (id === 'history') renderHistory(); if (id === 'expenses') renderExpenses(); updateStats(); window.scrollTo({top: 0, behavior: 'smooth'})}
+        document.querySelectorAll('#nav button').forEach(b => b.addEventListener('click', () => showPage(b.dataset.page)));
+        document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-IN', {weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'}).toUpperCase();
+        function localDateString(d = new Date()) {return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`}
+        function setDefaultSaleDate() {const el = document.getElementById('saleDate'); if (el && !el.value) el.value = localDateString()}
+        function dateKey(value) {if (!value) return ''; if (value instanceof Date && !Number.isNaN(value.getTime())) return localDateString(value); let str = String(value).trim(); if (!str) return ''; let m = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/); if (m) return `${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}`; m = str.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/); if (m) {let a = Number(m[1]), b = Number(m[2]), y = m[3];/* Google Sheets commonly returns M/D/YYYY; treat first number as month when >12 disambiguates. */let month = a, day = b; if (a > 12) {day = a; month = b} return `${y}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`} const parsed = new Date(str); return Number.isNaN(parsed.getTime()) ? '' : localDateString(parsed)}
+        function getSaleDate(s) {return dateKey(s.saleDate) || dateKey(s.sale_date) || dateKey(s['sale date']) || dateKey(s.salesDate) || dateKey(s.dateOfSale) || dateKey(s.date)}
+        function mondayOf(dateStr) {const d = new Date(dateStr + 'T12:00:00'); const offset = (d.getDay() + 6) % 7; d.setDate(d.getDate() - offset); return localDateString(d)}
+        function plusDays(dateStr, n) {const d = new Date(dateStr + 'T12:00:00'); d.setDate(d.getDate() + n); return localDateString(d)}
+        function prettyDate(dateStr) {return new Date(dateStr + 'T12:00:00').toLocaleDateString('en-IN', {day: 'numeric', month: 'short', year: 'numeric'})}
+        function getWeekOptions() {const starts = [...new Set(sales.map(s => getSaleDate(s)).filter(Boolean).map(mondayOf))].sort(); const current = mondayOf(localDateString()); if (!starts.includes(current)) starts.push(current); starts.sort(); return starts.map(start => ({start, end: plusDays(start, 6), label: `${prettyDate(start)} – ${prettyDate(plusDays(start, 6))}`}))}
+        function renderWeekOptions(preferred) {const sel = document.getElementById('weekSelect'); const old = preferred || sel.value; const opts = getWeekOptions(); sel.innerHTML = opts.length ? opts.slice().reverse().map(w => `<option value="${w.start}">${w.label}</option>`).join('') : '<option value="">No dated sales</option>'; const chosen = opts.find(w => w.start === old) || opts.find(w => w.start === mondayOf(localDateString())) || opts.slice().sort((a, b) => b.start.localeCompare(a.start))[0]; if (chosen) sel.value = chosen.start; renderWeekendChart()}
+        document.getElementById('weekSelect').addEventListener('change', renderWeekendChart);
+        function refreshWeekChart() {renderWeekOptions(document.getElementById('weekSelect').value)}
+        function renderWeekendChart() {const overview = document.getElementById('salesOverview'); const warning = document.getElementById('dateWarning'); if (!overview) return; const weekStart = document.getElementById('weekSelect').value; const dated = sales.map(s => ({...s, _saleDate: getSaleDate(s)})); const missing = dated.filter(s => !s._saleDate).length; warning.hidden = !missing; warning.textContent = missing ? `${missing} sale record(s) have no usable sale date in the API response. Your Google Sheet has a saleDate column, but Apps Script getSales must include that column in its returned data.` : ''; if (!weekStart) {overview.className = 'empty'; overview.textContent = 'No sale dates found. Check the saleDate field returned by Apps Script getSales.'; return } const saturday = plusDays(weekStart, 5), sunday = plusDays(weekStart, 6); const totals = {Saturday: 0, Sunday: 0}, orders = {Saturday: 0, Sunday: 0}; dated.forEach(s => {if (!s._saleDate) return; if (s._saleDate === saturday) {totals.Saturday += Number(s.total || 0); orders.Saturday++} else if (s._saleDate === sunday) {totals.Sunday += Number(s.total || 0); orders.Sunday++} }); const max = Math.max(totals.Saturday, totals.Sunday, 1); const bar = (day, value, count) => `<div class="barcol"><div class="bar-value">${money(value)}</div><div class="bar ${day === 'Saturday' ? 'saturday' : ''}" style="height:${value > 0 ? Math.max(10, value / max * 145) : 3}px" title="${day}: ${money(value)}"></div><strong>${day}</strong><small>${prettyDate(day === 'Saturday' ? saturday : sunday)}</small><small>${count} order${count === 1 ? '' : 's'}</small></div>`; overview.className = ''; overview.innerHTML = `<div class="week-label">Selected week: ${prettyDate(weekStart)} – ${prettyDate(plusDays(weekStart, 6))}</div><div class="chart-wrap">${bar('Saturday', totals.Saturday, orders.Saturday)}${bar('Sunday', totals.Sunday, orders.Sunday)}</div><div class="chart-summary"><div class="summarybox"><span>Saturday earnings</span><strong>${money(totals.Saturday)}</strong></div><div class="summarybox"><span>Sunday earnings</span><strong>${money(totals.Sunday)}</strong></div><div class="summarybox"><span>Weekend total</span><strong>${money(totals.Saturday + totals.Sunday)}</strong></div></div>`}
+        function renderSaleMenu() {document.getElementById('saleMenu').innerHTML = menu.map((p, i) => `<div class="menu-product"><span style="font-size:24px">${p.emoji || '🍽️'}</span><h3>${p.name || 'Product'}</h3><p>${p.size || 'Standard'} · ${money(p.price)}</p><button class="secondary" onclick="addCart(${i})">＋ Add item</button></div>`).join('') || '<div class="empty">No products found. Add products to the Menu sheet first.</div>'; document.getElementById('quickItems').innerHTML = menu.map((p, i) => `<div class="item"><span class="emoji">${p.emoji || '🍽️'}</span><b>${p.name || 'Product'}</b><span class="price">${p.size || 'Standard'} · ${money(p.price)}</span><button onclick="quickAdd(${i})">＋ Add</button></div>`).join('') || '<div class="empty">No products in the Menu sheet yet.</div>'}
+        function addCart(i) {if (menu[i]) cart.push({...menu[i]}); renderCart()} function quickAdd(i) {if (!menu[i]) return; cart.push({...menu[i], price: Number(menu[i].price)}); showPage('sale'); renderCart()} function removeCart(i) {cart.splice(i, 1); renderCart()} function clearCart() {cart = []; renderCart()} function renderCart() {const el = document.getElementById('cart'); el.innerHTML = cart.length ? cart.map((p, i) => `<div class="cartrow"><div>${p.emoji || '🍽️'} ${p.name}<small>${p.size || 'Standard'} · ${money(p.price)}</small></div><div style="text-align:right">${money(p.price)}<br><button onclick="removeCart(${i})">Remove</button></div></div>`).join('') : '<div class="empty">No items yet. Choose a product to begin.</div>'; document.getElementById('cartTotal').textContent = money(cart.reduce((sum, p) => sum + Number(p.price || 0), 0))}
+        async function completeSale() {if (!cart.length) {alert('Add at least one item first.'); return } const saleDate = document.getElementById('saleDate').value; if (!saleDate) {alert('Choose the date the sale happened.'); return } const total = cart.reduce((sum, p) => sum + Number(p.price || 0), 0); const sale = {id: '#SC-' + String(orderNo + 1).padStart(3, '0'), time: new Date().toLocaleString('en-IN'), saleDate, items: cart.map(x => x.name + ' (' + (x.size || 'Standard') + ')').join(', '), payment: document.getElementById('payment').value, total, status: 'Paid'}; try {const res = await apiPost('saveSale', sale); if (!res.success) {alert('Failed to save sale: ' + (res.error || '')); return } cart = []; renderCart(); await loadData(); renderSaleMenu(); renderWeekOptions(saleDate ? mondayOf(saleDate) : ''); setDefaultSaleDate(); alert('Sale saved to Google Sheets.'); showPage('history')} catch (err) {alert('Could not save sale. Check Apps Script deployment and connection.\n' + err)} }
+        function renderHistory() {const rows = [...sales].reverse(); document.getElementById('historyRows').innerHTML = rows.length ? rows.map(s => `<tr><td>${s.id || '—'}</td><td>${getSaleDate(s) || s.time || '—'}</td><td>${s.items || '—'}</td><td>${s.payment || '—'}</td><td>${money(s.total)}</td><td><span class="status">${s.status || 'Paid'}</span></td></tr>`).join('') : '<tr><td colspan="6" class="empty">No sales yet. Use New sale to add one.</td></tr>'}
+        function renderMenu() {document.getElementById('menuRows').innerHTML = menu.map((p, i) => `<tr><td>${p.emoji || '🍽️'} ${p.name || ''}</td><td>${p.size || 'Standard'}</td><td><input aria-label="Price for ${p.name}" type="number" min="0" value="${p.price}" style="width:82px;padding:7px;border:1px solid var(--line);border-radius:7px" id="price-${i}"></td><td><span class="status">Available</span></td><td><button class="secondary" onclick="savePrice(${i})">Save price</button></td></tr>`).join('') || '<tr><td colspan="5" class="empty">No menu products found.</td></tr>'}
+        async function savePrice(i) {if (!menu[i]) return; const v = Number(document.getElementById('price-' + i).value); if (!Number.isFinite(v) || v < 0) {alert('Enter a valid price.'); return } const old = menu[i].price; menu[i].price = v; try {const res = await apiPost('saveMenu', {menu: JSON.stringify(menu)}); if (!res.success) {menu[i].price = old; alert('Failed to save menu: ' + (res.error || '')); return } renderMenu(); renderSaleMenu(); alert('Price updated in Google Sheets.')} catch (err) {menu[i].price = old; alert('Could not save price. ' + err)} }
+        document.getElementById('expenseForm').addEventListener('submit', async e => {e.preventDefault(); const amount = Number(document.getElementById('expenseAmount').value); if (!Number.isFinite(amount) || amount <= 0) {alert('Enter a valid expense amount.'); return } const expense = {amount, category: document.getElementById('expenseCategory').value, note: document.getElementById('expenseNote').value.trim() || '—', time: new Date().toLocaleString('en-IN'), emoji: document.getElementById('expenseEmoji').value.trim()}; try {const res = await apiPost('saveExpense', expense); if (!res.success) {alert('Failed to save expense: ' + (res.error || 'Unknown error')); return } e.target.reset(); await loadData(); renderExpenses(); updateStats(); alert('Expense saved to Google Sheets.')} catch (err) {alert('Could not save expense. Check your connection and Apps Script deployment.\n' + err)} });
+        function renderExpenses() {const el = document.getElementById('expenseList'); document.getElementById('expenseCount').textContent = expenses.length + ' entr' + (expenses.length === 1 ? 'y' : 'ies'); el.innerHTML = expenses.length ? expenses.map(x => `<div class="cartrow"><div style="display:flex;align-items:center;gap:12px;min-width:0"><span style="font-size:26px;min-width:32px;text-align:center">${x.emoji || '🧾'}</span><div><b>${x.category || 'Other'}</b><small>${x.note || '—'} · ${x.time || '—'}</small></div></div><b>${money(x.amount)}</b></div>`).join('') : '<div class="empty">No expenses added yet.</div>'}
+        function updateStats() {const rev = sales.reduce((sum, x) => sum + Number(x.total || 0), 0), cost = expenses.reduce((sum, x) => sum + Number(x.amount || 0), 0); document.getElementById('statSales').textContent = money(rev); document.getElementById('statOrders').textContent = sales.length; document.getElementById('statExpenses').textContent = money(cost); document.getElementById('statBalance').textContent = money(rev - cost); document.getElementById('reportRevenue').textContent = money(rev); document.getElementById('reportExpenses').textContent = money(cost); document.getElementById('reportProfit').textContent = money(rev - cost); const all = [...sales].reverse(); document.getElementById('recentRows').innerHTML = all.length ? all.slice(0, 4).map(s => `<tr><td>${s.id || '—'}</td><td>${String(s.time || '—').split(',').pop()}</td><td>${s.payment || '—'}</td><td>${money(s.total)}</td><td><span class="status">${s.status || 'Paid'}</span></td></tr>`).join('') : '<tr><td colspan="5" class="empty">No sales recorded yet.</td></tr>'}
+        function exportSales() {if (!sales.length) {alert('No sales to export yet.'); return } const q = s => '"' + String(s ?? '').replace(/"/g, '""') + '"'; const csv = 'Order,Sale date,Date/time,Items,Payment,Total\n' + sales.map(s => [s.id, getSaleDate(s), s.time, s.items, s.payment, s.total].map(q).join(',')).join('\n'); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], {type: 'text/csv'})); a.download = 'swasthy-crave-sales.csv'; a.click(); URL.revokeObjectURL(a.href)}
+        async function init() {setDefaultSaleDate(); try {await loadData()} catch (err) {document.getElementById('salesOverview').className = 'empty'; document.getElementById('salesOverview').textContent = 'Could not connect to Google Sheets. Check API URL/deployment and browser console.'; console.error(err)} renderSaleMenu(); renderCart(); renderMenu(); renderHistory(); renderExpenses(); renderWeekOptions(); updateStats()}
+        init();
+    </script>
+</body>
+
+</html>
